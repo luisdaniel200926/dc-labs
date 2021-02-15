@@ -174,17 +174,24 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	// Response construction
 	response := fmt.Sprintf("Welcome to the Remote Shapes Analyzer\n")
 	response += fmt.Sprintf(" - Your figure has : [%v] vertices\n", len(vertices))
+	 
+	problem:=false
 
-	if len(vertices)>2{
-	response += fmt.Sprintf(" - Vertices        : %v\n", vertices)
-	response += fmt.Sprintf(" - Perimeter       : %v\n", perimeter)
-	response += fmt.Sprintf(" - Area            : %v\n", area)
-	}else if hasIntersections(vertices) && len(vertices)>=4{
-		response += fmt.Sprintf(" - Error -Your shape has some kind of intersections between lines-")
-
-	}else{
-		response += fmt.Sprintf(" - Error -Your shape has not enough vertex-")
+	if hasIntersections(vertices) && len(vertices)>=4{
+		response += fmt.Sprintf(" - Error -Your shape has some kind of intersections between lines-\n")
+		problem=true
 	}
+	if len(vertices)<=2{
+		response += fmt.Sprintf(" - Error -Your shape has not enough vertex-\n")
+		problem=true
+	}
+	if	problem==false{
+		response += fmt.Sprintf(" - Vertices        : %v\n", vertices)
+		response += fmt.Sprintf(" - Perimeter       : %v\n", perimeter)
+		response += fmt.Sprintf(" - Area            : %v\n", area)
+	}
+	
+
 	// Send response to client
 	fmt.Fprintf(w, response)
 }
